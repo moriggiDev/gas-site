@@ -1,0 +1,47 @@
+:root {
+  --azul: #0d0f8c;
+  --azul-escuro: #080a5e;
+  --vermelho: #d8232a;
+  --vermelho-escuro: #a3181d;
+  --amarelo: #ffd400;
+  --creme: #f4f7ff;
+  --tinta: #14141a;
+  --tinta-suave: #4a4a55;
+  --linha: #14141a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  background: var(--creme);
+  color: var(--tinta);
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+h1,
+h2,
+h3,
+.display {
+  font-family: "Baloo 2", "Inter", system-ui, sans-serif;
+  font-weight: 700;
+  line-height: 1.05;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+}
+
+::selection {
+  background: var(--amarelo);
+  color: var(--tinta);
+}
