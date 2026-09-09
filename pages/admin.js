@@ -5,6 +5,7 @@ export default function Admin() {
   const [unlocked, setUnlocked] = useState(false);
   const [data, setData] = useState(null);
   const [status, setStatus] = useState("");
+  const [neighborhoodsText, setNeighborhoodsText] = useState("");
 
   useEffect(() => {
     const saved = sessionStorage.getItem("admin-password");
@@ -18,7 +19,10 @@ export default function Admin() {
     if (unlocked) {
       fetch("/api/data")
         .then((r) => r.json())
-        .then(setData);
+        .then((d) => {
+          setData(d);
+          setNeighborhoodsText(d.neighborhoods.join(", "));
+        });
     }
   }, [unlocked]);
 
@@ -30,13 +34,18 @@ export default function Admin() {
 
   async function save() {
     setStatus("Salvando...");
+    const neighborhoods = neighborhoodsText
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const payload = { ...data, neighborhoods };
     const res = await fetch("/api/data", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "x-admin-password": password,
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload),
     });
     if (res.status === 401) {
       setStatus("Senha incorreta. Recarregue a página e tente de novo.");
@@ -47,6 +56,7 @@ export default function Admin() {
       setStatus("Erro ao salvar. Tente novamente.");
       return;
     }
+    setData(payload);
     setStatus("Salvo! O site já está atualizado.");
     setTimeout(() => setStatus(""), 3000);
   }
@@ -57,13 +67,6 @@ export default function Admin() {
       cylinders: d.cylinders.map((c) =>
         c.id === id ? { ...c, [field]: field === "price" ? Number(value) : value } : c
       ),
-    }));
-  }
-
-  function updateNeighborhoods(value) {
-    setData((d) => ({
-      ...d,
-      neighborhoods: value.split(",").map((s) => s.trim()).filter(Boolean),
     }));
   }
 
@@ -131,8 +134,8 @@ export default function Admin() {
         <label style={S.label}>Bairros atendidos (separados por vírgula)</label>
         <input
           style={S.inputFull}
-          value={data.neighborhoods.join(", ")}
-          onChange={(e) => updateNeighborhoods(e.target.value)}
+          value={neighborhoodsText}
+          onChange={(e) => setNeighborhoodsText(e.target.value)}
         />
         <label style={S.label}>Horário de funcionamento</label>
         <input

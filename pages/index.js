@@ -10,9 +10,11 @@ function waLink(phone, text) {
 }
 
 export default function Home({ data }) {
-  const cheapest = data.cylinders.reduce(
+  const validCylinders = data.cylinders.filter((c) => c.price > 0);
+  const pool = validCylinders.length ? validCylinders : data.cylinders;
+  const cheapest = pool.reduce(
     (min, c) => (c.price < min.price ? c : min),
-    data.cylinders[0]
+    pool[0]
   );
 
   return (
@@ -44,15 +46,20 @@ export default function Home({ data }) {
               Pedir no WhatsApp
             </a>
           </div>
-          <div style={styles.heroArt} aria-hidden="true">
-            <FlameArt />
-          </div>
+        </div>
+        <div style={styles.heroBanner}>
+          <img
+            src="/mascotes.png"
+            alt="Mascotes São Francisco Gás e caminhão de entrega"
+            style={styles.heroImg}
+          />
         </div>
       </header>
 
       {/* PREÇOS */}
       <section style={styles.section}>
         <h2 style={styles.sectionTitle}>Preços</h2>
+        <span style={styles.sectionAccent} aria-hidden="true" />
         <div style={styles.priceList}>
           {data.cylinders.map((c, i) => (
             <div
@@ -75,6 +82,7 @@ export default function Home({ data }) {
       {/* ÁREA DE ENTREGA */}
       <section style={{ ...styles.section, paddingTop: 0 }}>
         <h2 style={styles.sectionTitle}>Área de entrega</h2>
+        <span style={styles.sectionAccent} aria-hidden="true" />
         <div style={styles.chipRow}>
           {data.neighborhoods.map((n) => (
             <span key={n} style={styles.chip}>
@@ -114,21 +122,6 @@ function formatPhone(digits) {
   return `(${ddd}) ${rest.slice(0, 5)}-${rest.slice(5)}`;
 }
 
-function FlameArt() {
-  return (
-    <svg viewBox="0 0 240 280" width="100%" style={{ maxWidth: 260 }}>
-      <path
-        d="M120 20 C60 90 40 140 60 190 C75 230 115 260 120 260 C125 260 165 230 180 190 C200 140 180 90 120 20 Z"
-        fill="var(--vermelho)"
-      />
-      <path
-        d="M120 90 C95 130 88 160 100 190 C108 212 118 228 120 228 C122 228 132 212 140 190 C152 160 145 130 120 90 Z"
-        fill="var(--amarelo)"
-      />
-    </svg>
-  );
-}
-
 const styles = {
   hero: {
     background: "var(--azul)",
@@ -137,11 +130,7 @@ const styles = {
   heroInner: {
     maxWidth: 1000,
     margin: "0 auto",
-    padding: "56px 24px 72px",
-    display: "flex",
-    alignItems: "center",
-    gap: 32,
-    flexWrap: "wrap",
+    padding: "56px 24px 28px",
   },
   heroText: {
     flex: "1 1 360px",
@@ -197,10 +186,19 @@ const styles = {
     textDecoration: "none",
     border: "2px solid var(--tinta)",
   },
-  heroArt: {
-    flex: "0 0 220px",
-    display: "flex",
-    justifyContent: "center",
+  heroBanner: {
+    maxWidth: 1000,
+    margin: "0 auto",
+    padding: "0 24px 56px",
+  },
+  heroImg: {
+    width: "100%",
+    maxHeight: 260,
+    objectFit: "cover",
+    objectPosition: "center",
+    borderRadius: 14,
+    border: "3px solid var(--amarelo)",
+    display: "block",
   },
   section: {
     maxWidth: 1000,
@@ -209,8 +207,16 @@ const styles = {
   },
   sectionTitle: {
     fontSize: 26,
-    marginBottom: 20,
+    marginBottom: 10,
     color: "var(--tinta)",
+  },
+  sectionAccent: {
+    display: "block",
+    width: 56,
+    height: 5,
+    borderRadius: 3,
+    background: "var(--vermelho)",
+    marginBottom: 22,
   },
   priceList: {
     display: "flex",
