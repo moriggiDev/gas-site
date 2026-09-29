@@ -101,7 +101,7 @@ export default function Admin() {
       <h1 style={S.title}>Painel admin — São Francisco Gás</h1>
 
       <section style={S.card}>
-        <h2 style={S.cardTitle}>Preços dos botijões</h2>
+        <h2 style={S.cardTitle}>Preços dos produtos</h2>
         {data.cylinders.map((c) => (
           <div key={c.id} style={S.row}>
             <input

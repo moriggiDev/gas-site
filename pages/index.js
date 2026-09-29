@@ -10,8 +10,9 @@ function waLink(phone, text) {
 }
 
 export default function Home({ data }) {
-  const validCylinders = data.cylinders.filter((c) => c.price > 0);
-  const pool = validCylinders.length ? validCylinders : data.cylinders;
+  const gasCylinders = data.cylinders.filter((c) => c.id !== "agua20");
+  const validCylinders = gasCylinders.filter((c) => c.price > 0);
+  const pool = validCylinders.length ? validCylinders : gasCylinders;
   const cheapest = pool.reduce(
     (min, c) => (c.price < min.price ? c : min),
     pool[0]
@@ -193,9 +194,8 @@ const styles = {
   },
   heroImg: {
     width: "100%",
-    maxHeight: 260,
-    objectFit: "cover",
-    objectPosition: "center",
+    height: "auto",
+    objectFit: "contain",
     borderRadius: 14,
     border: "3px solid var(--amarelo)",
     display: "block",
